@@ -5,6 +5,8 @@ from time import time
 class Fibonacci:
     def __init__(self):
         self.cache = {0:0 , 1:1}
+        self.ricorsioni = 0
+        self.ricorsioni_cache = 0
 
     def calcola_elemento_cache(self , n):
         # se ho già la soluzione per questo n la prendo dalla cache
@@ -12,6 +14,7 @@ class Fibonacci:
             return self.cache[n]
         # altrimenti vado avanti con la ricorsione
         else:
+            self.ricorsioni_cache += 1
             self.cache[n] = (self.calcola_elemento_cache(n-1)+ self.calcola_elemento_cache(n-2))
             return self.cache[n]
 
@@ -21,6 +24,7 @@ class Fibonacci:
         elif n == 1:
             return 1
         else:
+            self.ricorsioni +=1
             return self.calcola_elemento(n-1) + self.calcola_elemento(n-2)
 
     @lru_cache(maxsize=None)
@@ -33,17 +37,19 @@ class Fibonacci:
             return self.calcola_elemento_lru(n-1) + self.calcola_elemento_lru(n-2)
 
 if __name__ == "__main__":
-    N = 40
+    N = 10
     fib = Fibonacci()
     start_time = time()
     print(fib.calcola_elemento(N))
     end_time = time()
     print(f"Elapsed time recursion: {end_time-start_time}")
+    print(fib.ricorsioni)
 
     start_time = time()
     print(fib.calcola_elemento_cache(N))
     end_time = time()
     print(f"Elapsed time cache: {end_time-start_time}")
+    print(fib.ricorsioni_cache)
 
     start_time = time()
     print(fib.calcola_elemento_lru(N))
